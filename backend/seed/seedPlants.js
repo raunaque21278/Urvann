@@ -53,7 +53,7 @@ const plants = [
   { name: "Poinsettia", price: 249, categories: ["Indoor", "Colorful"], available: true }
 ];
 
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGO_URI)
   .then(async () => {
     await Plant.deleteMany({});
     await Plant.insertMany(plants);
