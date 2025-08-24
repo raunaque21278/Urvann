@@ -7,3 +7,5 @@ frontend/.env
 frontend/build/
 .DS_Store
 *.log
+
+.vercel

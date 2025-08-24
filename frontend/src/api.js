@@ -2,9 +2,9 @@ import axios from 'axios';
 
 // API URL configuration for different environments
 const getApiUrl = () => {
-  // Production: Use environment variable or fallback to Render backend
+  // Production: Use environment variable or fallback to Vercel backend
   if (process.env.NODE_ENV === 'production') {
-    return process.env.REACT_APP_API_URL || 'https://urvann-2-mlfr.onrender.com/api/plants';
+    return process.env.REACT_APP_API_URL || '/api/plants';
   }
   // Development: Use environment variable or fallback to localhost
   return process.env.REACT_APP_API_URL || 'http://localhost:5000/api/plants';

@@ -1,0 +1,3 @@
+@echo off
+echo Adding MONGO_URI to Vercel...
+echo mongodb+srv://raunaque21278:password2025@cluster0.vj5ll4h.mongodb.net/urvann?retryWrites=true&w=majority | vercel env add MONGO_URI production
