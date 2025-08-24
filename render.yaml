@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: urvann-fullstack
+    env: node
+    buildCommand: cd backend && npm install && cd ../frontend && npm install && npm run build
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        fromDatabase:
+          name: mongodb-atlas
+          property: connectionString
