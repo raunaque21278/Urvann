@@ -20,7 +20,9 @@ app.use(cors({
 app.use(express.json());
 
 // API routes
+console.log('Loading plant routes...');
 app.use('/api/plants', plantRoutes);
+console.log('Plant routes loaded successfully');
 
 // Health check endpoint
 app.get('/', (req, res) => {
@@ -43,6 +45,46 @@ app.get('/test', (req, res) => {
     message: 'Test endpoint working!',
     status: 'OK'
   });
+});
+
+// Manual seed endpoint for debugging
+app.get('/seed', async (req, res) => {
+  try {
+    console.log('Manual seed endpoint called');
+    const result = await seedDatabase();
+    const count = await require('./models/Plant').countDocuments();
+    res.json({
+      message: 'Database seeding completed',
+      plantsInDatabase: count,
+      status: 'OK'
+    });
+  } catch (error) {
+    console.error('Seed endpoint error:', error);
+    res.status(500).json({
+      error: 'Seeding failed',
+      details: error.message
+    });
+  }
+});
+
+// Debug endpoint to check database
+app.get('/debug', async (req, res) => {
+  try {
+    const Plant = require('./models/Plant');
+    const count = await Plant.countDocuments();
+    const plants = await Plant.find().limit(5);
+    res.json({
+      message: 'Debug info',
+      plantsCount: count,
+      samplePlants: plants,
+      mongoUri: process.env.MONGO_URI ? 'Configured' : 'Missing'
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: 'Debug failed',
+      details: error.message
+    });
+  }
 });
 
 // API documentation endpoint

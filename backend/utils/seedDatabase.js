@@ -10,20 +10,39 @@ const plants = [
   { name: "Spider Plant", price: 299, categories: ["Indoor", "Air Purifying"], available: true },
   { name: "Rubber Plant", price: 399, categories: ["Indoor", "Home Decor"], available: true },
   { name: "Fiddle Leaf Fig", price: 599, categories: ["Indoor", "Home Decor"], available: true },
-  { name: "Boston Fern", price: 349, categories: ["Indoor", "Air Purifying"], available: true }
+  { name: "Boston Fern", price: 349, categories: ["Indoor", "Air Purifying"], available: true },
+  { name: "Pothos", price: 249, categories: ["Indoor", "Air Purifying"], available: true },
+  { name: "ZZ Plant", price: 399, categories: ["Indoor", "Low Maintenance"], available: true }
 ];
 
 const seedDatabase = async () => {
   try {
+    console.log('Starting database seeding...');
+    
     const count = await Plant.countDocuments();
+    console.log('Current plant count in database:', count);
+    
     if (count === 0) {
-      await Plant.insertMany(plants);
-      console.log('Database seeded with', plants.length, 'plants');
+      console.log('Database is empty, inserting plants...');
+      const result = await Plant.insertMany(plants);
+      console.log('Database seeded successfully with', result.length, 'plants');
+      return result;
     } else {
-      console.log('Database already has', count, 'plants');
+      console.log('Database already has', count, 'plants, skipping seed');
+      return await Plant.find();
     }
   } catch (error) {
     console.error('Error seeding database:', error);
+    // If seeding fails, try to insert one by one
+    try {
+      console.log('Trying individual plant insertion...');
+      for (const plant of plants) {
+        await Plant.create(plant);
+      }
+      console.log('Individual insertion successful');
+    } catch (individualError) {
+      console.error('Individual insertion also failed:', individualError);
+    }
   }
 };
 
