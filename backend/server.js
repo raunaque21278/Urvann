@@ -12,10 +12,18 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // CORS configuration for API deployment
-app.use(cors({
-  origin: process.env.FRONTEND_URL || '*',
+const corsOptions = {
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:3001', 
+    'https://urvann-frontend.vercel.app',
+    'https://urvann.vercel.app',
+    /\.vercel\.app$/
+  ],
   credentials: true
-}));
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
