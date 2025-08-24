@@ -6,6 +6,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const plantRoutes = require('./routes/plants');
+const seedDatabase = require('./utils/seedDatabase');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -26,9 +27,21 @@ app.get('/', (req, res) => {
   res.json({ 
     message: 'Urvann Plant API is running!', 
     version: '1.0.0',
+    status: 'OK',
+    timestamp: new Date().toISOString(),
     endpoints: {
-      plants: '/api/plants'
+      'GET /': 'This health check',
+      'GET /api': 'API documentation',
+      'GET /api/plants': 'Get all plants'
     }
+  });
+});
+
+// Test endpoint
+app.get('/test', (req, res) => {
+  res.json({ 
+    message: 'Test endpoint working!',
+    status: 'OK'
   });
 });
 
@@ -54,9 +67,13 @@ if (!MONGO_URI) {
 }
 
 mongoose.connect(MONGO_URI)
-  .then(() => {
+  .then(async () => {
     console.log('Connected to MongoDB successfully');
     console.log('MONGO_URI configured properly');
+    
+    // Seed the database
+    await seedDatabase();
+    
     app.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running on port ${PORT}`);
       console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
